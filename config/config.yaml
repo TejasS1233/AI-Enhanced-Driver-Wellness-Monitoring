@@ -1,0 +1,92 @@
+# AI-Enhanced Driver Wellness Monitoring System Configuration
+
+camera:
+  device_id: 0 
+  fps: 30
+  width: 640
+  height: 480
+  buffer_size: 1
+
+
+preprocessing:
+  target_width: 320
+  target_height: 240
+  apply_clahe: true
+  clahe_clip_limit: 2.0
+  clahe_grid_size: [8, 8]
+  normalize: true
+
+face_detection:
+  max_num_faces: 1
+  min_detection_confidence: 0.5
+  min_tracking_confidence: 0.5
+  refine_landmarks: true
+
+features:
+  ear_threshold: 0.21
+  ear_consecutive_frames: 3 
+
+  mar_threshold: 0.6 
+  mar_consecutive_frames: 3
+
+  normal_blink_rate: [15, 20]
+  high_blink_rate: 30
+
+  head_pose_pitch_threshold: 20
+  head_pose_yaw_threshold: 25 
+  head_pose_roll_threshold: 15
+
+temporal:
+  window_size_seconds: 10
+  overlap_seconds: 5
+  features_per_second: 3
+
+model:
+  type: "lstm" 
+  lstm_units: 64
+  lstm_layers: 2
+  dropout: 0.3
+  sequence_length: 30
+  drowsy_threshold: 0.7
+  alert_threshold: 0.3
+  stress_threshold: 0.6
+
+alerts:
+  drowsy:
+    enabled: true
+    sound_file: "alerts/drowsy_alert.wav"
+    message: "Driver drowsiness detected! Please take a break."
+    visual_alert: true
+
+  stressed:
+    enabled: true
+    message: "High stress detected. Consider deep breathing exercises."
+    suggestion: "Take a short break if possible."
+
+  distracted:
+    enabled: true
+    message: "Please keep your eyes on the road."
+  cooldown_period: 30
+
+  escalation_enabled: true
+  escalation_time: 60 
+  
+logging:
+  enabled: true
+  log_level: "INFO"
+  save_frames: false
+  save_metrics: true
+  metrics_file: "data/metrics.csv"
+  session_logs: "data/logs/"
+
+
+performance:
+  use_gpu: false 
+  num_threads: 4
+  frame_skip: 0
+
+data_collection:
+  enabled: false
+  anonymize: true
+  cloud_sync: false
+  local_storage: "data/sessions/"
