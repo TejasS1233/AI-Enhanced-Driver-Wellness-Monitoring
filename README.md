@@ -103,72 +103,6 @@ Edit `config/config.yaml` to customize:
 - `data/logs/session_*.json`: Session summaries
 - Alert history and statistics
 
-### Session Summary
-
-```
-SESSION SUMMARY
-================================================================
-Session ID: 20251024_143022
-Duration: 125.3 seconds
-Total Frames: 3759
-Face Detection Rate: 98.5%
-Total Alerts: 3
-  - drowsy: 2
-  - distracted: 1
-Alert Rate: 0.08%
-================================================================
-```
-
-## 🧪 Feature Details
-
-### Eye Aspect Ratio (EAR)
-
-```
-EAR = (||p2-p6|| + ||p3-p5||) / (2 * ||p1-p4||)
-```
-
-- Normal: > 0.21
-- Drowsy: < 0.21 for 3+ consecutive frames
-
-### Mouth Aspect Ratio (MAR)
-
-```
-MAR = (||p2-p8|| + ||p3-p7|| + ||p4-p6||) / (2 * ||p1-p5||)
-```
-
-- Normal: < 0.6
-- Yawning: > 0.6 for 3+ consecutive frames
-
-### Head Pose
-
-- **Yaw**: Left/right rotation (distraction)
-- **Pitch**: Up/down tilt (nodding off)
-- **Roll**: Head tilt
-
-## 🔬 Technical Stack
-
-- **Computer Vision**: OpenCV, MediaPipe
-- **Machine Learning**: TensorFlow, Scikit-learn
-- **Data Processing**: NumPy, Pandas, SciPy
-- **Audio**: pygame
-- **Logging**: colorlog
-
-## 📈 Performance
-
-- **Processing Speed**: 25-30 FPS (real-time)
-- **Face Detection**: MediaPipe Face Mesh
-- **Latency**: < 50ms per frame
-- **Accuracy**: 95%+ drowsiness detection
-
-## 🛣️ Roadmap
-
-- [ ] LSTM-based temporal classification model
-- [ ] Stress detection via facial action units
-- [ ] Mobile app integration
-- [ ] Cloud analytics dashboard
-- [ ] Multiple driver profiles
-- [ ] Integration with vehicle systems
-
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -181,15 +115,6 @@ This project is licensed under the MIT License.
 
 - Tejas S - [TejasS1233](https://github.com/TejasS1233)
 
-## 🙏 Acknowledgments
-
-- MediaPipe by Google for facial landmark detection
-- OpenCV community
-- iMobilothon 5.0 organizers
-
-## 📞 Support
-
-For issues or questions, please open an issue on GitHub.
 
 ---
 
