@@ -10,6 +10,7 @@ from face_detection import FaceLandmarkDetector
 from feature_extraction import FeatureExtractor
 from alert_system import AlertSystem
 from data_logger import DataLogger
+from drowsiness_model import DrowsinessLSTM
 from utils import load_config, setup_logging, create_output_dirs, RollingBuffer
 
 
@@ -43,6 +44,25 @@ class DriverWellnessMonitor:
         self.alert_system = AlertSystem(self.config)
         
         self.data_logger = DataLogger(self.config)
+        
+        self.lstm_model = None
+        lstm_model_path = Path('models/drowsiness_lstm.h5')
+        if lstm_model_path.exists():
+            try:
+                self.lstm_model = DrowsinessLSTM(
+                    sequence_length=self.config['temporal']['sequence_length'],
+                    n_features=10
+                )
+                self.lstm_model.load_model()
+                self.use_lstm = True
+                self.logger.info("LSTM model loaded successfully - using ML predictions")
+            except Exception as e:
+                self.logger.warning(f"Failed to load LSTM model: {e}")
+                self.logger.info("Falling back to rule-based drowsiness detection")
+                self.use_lstm = False
+        else:
+            self.logger.info("No trained LSTM model found - using rule-based detection")
+            self.use_lstm = False
         
         self.feature_history = []
         self.max_history_size = (
@@ -149,6 +169,13 @@ class DriverWellnessMonitor:
         return True, display_frame
     
     def _estimate_drowsiness_probability(self, features: Dict[str, float]) -> float:
+        if self.use_lstm and len(self.feature_history) >= self.config['temporal']['sequence_length']:
+            try:
+                drowsy_prob = self.lstm_model.predict(self.feature_history)
+                return float(drowsy_prob)
+            except Exception as e:
+                self.logger.error(f"LSTM prediction failed: {e}")
+        
         score = 0.0
         
         ear_threshold = self.config['features']['ear_threshold']
